@@ -189,24 +189,123 @@ def playfair_decrypt(ciphertext, ciphertextpairs, key_matrix):
 
 
 def main():
-    msg = input("Enter Message: ").lower()
-    msg = remove(msg)
-    keycode = input("Enter Key: ").lower()
-    matrix = key_matrix_generation(str(keycode))
+    mode = int(input("1. Type Text\n2. Input File\nChoose(1,2): "))
+    if mode == 1:
+        msg = input("Enter Message: ").lower()
+        msg = remove(msg)
+        keycode = input("Enter Key: ").lower()
+        matrix = key_matrix_generation(str(keycode))
 
-    choice = int(input("1. Encrypttion\n2. Decryption\nChoose(1,2): "))
-    if choice == 1:
-        print("--Encryption--")
-        pairs = []
-        encrypt_result = playfair_encrypt(msg, pairs, matrix)
-        print("plaintext: " + "".join(encrypt_result))
+        choice = int(input("1. Encryption\n2. Decryption\nChoose(1,2): "))
+        if choice == 1:
+            
+            space = int(input("1. No space\n2. Space every 5 char\nChoose(1,2):"))
+            if space == 1:
+                print("--Encryption--")
+                pairs = []
+                encrypt_result = playfair_encrypt(msg, pairs, matrix)
+                print("ciphertext: " + "".join(encrypt_result))
+            elif space == 2:
+                print("--Encryption--")
+                pairs = []
+                encrypt_result = playfair_encrypt(msg, pairs, matrix)
+                str1 = ""
+                encrypt_result = str1.join(encrypt_result)
+                encrypt_result= " ".join(encrypt_result[i:i + 5] for i in range(0, len(encrypt_result), 5))
+                print("ciphertext: " + "".join(encrypt_result))
+            else:
+                print("Invalid Input")
 
-    elif choice == 2:
-        print("--Decryption--")
-        pairs = []
-        decrypt_result = playfair_decrypt(msg, pairs, matrix)
-        print("plaintext: " + "".join(decrypt_result))
+        elif choice == 2:
+
+            space = int(input("1. No space\n2. Space every 5 char\nChoose(1,2):"))
+            if space == 1:
+                print("--Decryption--")
+                pairs = []
+                decrypt_result = playfair_decrypt(msg, pairs, matrix)
+                print("plaintext: " + "".join(decrypt_result))
+            elif space == 2:
+                print("--Decryption--")
+                pairs = []
+                decrypt_result = playfair_decrypt(msg, pairs, matrix)
+                str1 = ""
+                decrypt_result = str1.join(decrypt_result)
+                decrypt_result= " ".join(decrypt_result[i:i + 5] for i in range(0, len(decrypt_result), 5))
+                print("plaintext: " + "".join(decrypt_result))
+            else:
+                print("Invalid Input")
+
+        else:
+            print("Invalid input")
+
+            
+    elif mode == 2:
+        infile_name = input("Enter input file name: ")
+        infile = open(infile_name, 'r+')
+
+        msg = infile.read()
+        msg = remove(msg).lower()
+        keycode = input("Enter Key: ").lower()
+
+        matrix = key_matrix_generation(str(keycode))
+
+        choice = int(input("1. Encryption\n2. Decryption\nChoose(1,2): "))
+        if choice == 1:
+            
+            space = int(input("1. No space\n2. Space every 5 char\nChoose(1,2):"))
+            if space == 1:
+                print("--Encryption--")
+                pairs = []
+                encrypt_result = playfair_encrypt(msg, pairs, matrix)
+                print("ciphertext: " + "".join(encrypt_result))
+
+                save = int(input("1. Save message to file\n2. Dont Save\nChoose(1,2):"))
+                if save == 1:
+                    infile.write(encrypt_result)
+                else:
+                    pass
+                
+            elif space == 2:
+                print("--Encryption--")
+                pairs = []
+                encrypt_result = playfair_encrypt(msg, pairs, matrix)
+                str1 = ""
+                encrypt_result = str1.join(encrypt_result)
+                encrypt_result= " ".join(encrypt_result[i:i + 5] for i in range(0, len(encrypt_result), 5))
+                print("ciphertext: " + "".join(encrypt_result))
+
+                save = int(input("1. Save message to file\n2. Dont Save\nChoose(1,2):"))
+                if save == 1:
+                    infile.write(encrypt_result)
+                else:
+                    pass
+            else:
+                print("Invalid Input")
+
+        elif choice == 2:
+            
+            space = int(input("1. No space\n2. Space every 5 char\nChoose(1,2):"))
+            if space == 1:
+                print("--Decryption--")
+                pairs = []
+                decrypt_result = playfair_decrypt(msg, pairs, matrix)
+                print("plaintext: " + "".join(decrypt_result))
+            elif space == 2:
+                print("--Decryption--")
+                pairs = []
+                decrypt_result = playfair_decrypt(msg, pairs, matrix)
+                str1 = ""
+                decrypt_result = str1.join(decrypt_result)
+                decrypt_result= " ".join(decrypt_result[i:i + 5] for i in range(0, len(decrypt_result), 5))
+                print("plaintext: " + "".join(decrypt_result))
+            else:
+                print("Invalid Input")
+
+        else:
+            print("Invalid input")
+
+            
     else:
-        print("Invalid input")
+        print("Invalid Input")
 
 main()

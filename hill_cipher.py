@@ -1,8 +1,9 @@
 import sys
 import numpy as np
+import string
 
 
-def remove(string): 
+def remove(string):
     return string.replace(" ", "")
 
 def hill_encryption(msg, key):
@@ -27,7 +28,7 @@ def hill_encryption(msg, key):
         else:
             msg2d[1][itr2] = int(ord(msg[i])-65)
             itr2 += 1
-   
+
 
     key2d = np.zeros((2, 2), dtype=int)
     itr3 = 0
@@ -62,14 +63,14 @@ def hill_encryption(msg, key):
             encryp_text += chr((temp1 % 26) + 65)
             temp2 = msg2d[0][i] * key2d[1][0] + msg2d[1][i] * key2d[1][1]
             encryp_text += chr((temp2 % 26) + 65)
-        
+
     else:
         for i in range(itr_count-1):
             temp1 = msg2d[0][i] * key2d[0][0] + msg2d[1][i] * key2d[0][1]
             encryp_text += chr((temp1 % 26) + 65)
             temp2 = msg2d[0][i] * key2d[1][0] + msg2d[1][i] * key2d[1][1]
             encryp_text += chr((temp2 % 26) + 65)
-        
+
 
     return encryp_text
 
@@ -95,16 +96,16 @@ def hill_decryption(msg, key):
         else:
             msg2d[1][itr2] = int(ord(msg[i]) - 65)
             itr2 += 1
-      
 
-    
+
+
     key2d = np.zeros((2, 2), dtype=int)
     itr3 = 0
     for i in range(2):
         for j in range(2):
             key2d[i][j] = ord(key[itr3]) - 65
             itr3 += 1
-    
+
 
     # Mencari Determinan
     deter = key2d[0][0] * key2d[1][1] - key2d[0][1] * key2d[1][0]
@@ -151,33 +152,113 @@ def hill_decryption(msg, key):
             decryp_text += chr((temp1 % 26) + 65)
             temp2 = msg2d[0][i] * key2d[1][0] + msg2d[1][i] * key2d[1][1]
             decryp_text += chr((temp2 % 26) + 65)
-            
+
     else:
         for i in range(itr_count - 1):
             temp1 = msg2d[0][i] * key2d[0][0] + msg2d[1][i] * key2d[0][1]
             decryp_text += chr((temp1 % 26) + 65)
             temp2 = msg2d[0][i] * key2d[1][0] + msg2d[1][i] * key2d[1][1]
             decryp_text += chr((temp2 % 26) + 65)
-            
+
     return decryp_text
 
 
 def main():
-    message = input("Enter message: ").upper()
-    message = remove(message)
-    keycode = input("Enter 4 letter Key String: ").upper()
-    keycode = remove(keycode)
-    
-    choice = int(input("1. Encryption\n2. Decryption\nChoose(1,2): "))
-    if choice == 1:
-        print("---Encryption---")
-        encrypted_text = hill_encryption(message, keycode)
-        print("Decrypted Text: {}".format(encrypted_text).lower)
-    elif choice == 2:
-        print("---Decryption---")
-        decrypted_text = hill_decryption(message, keycode)
-        print("Decrypted Text: {}".format(decrypted_text).lower())
-    else:
-        print("Invalid Input")
+    mode = int(input("1. Type Text\n2. Input File\nChoose(1,2): "))
+    if mode == 1:
+        message = input("Enter message: ").upper()
+        message = remove(message)
+        keycode = input("Enter 4 letter Key String: ").upper()
+        keycode = remove(keycode)
 
+        choice = int(input("1. Encryption\n2. Decryption\nChoose(1,2): "))
+        if choice == 1:
+
+            space = int(input("1. No space\n2. Space every 5 char\nChoose(1,2):"))
+            if space == 1:
+                print("---Encryption---")
+                encrypted_text = hill_encryption(message, keycode)
+                print("Encrypted Text: {}".format(encrypted_text).lower())
+            elif space == 2:
+                print("---Encryption---")
+                encrypted_text = hill_encryption(message, keycode)
+                encrypted_text = " ".join(encrypted_text[i:i + 5] for i in range(0, len(encrypted_text), 5))
+                print("Encrypted Text: {}".format(encrypted_text).lower())
+            else:
+                print("Invalid Input")
+
+
+
+        elif choice == 2:
+            space = int(input("1. No space\n2. Space every 5 char\nChoose(1,2):"))
+            if space == 1:
+                print("---Decryption---")
+                decrypted_text = hill_decryption(message, keycode)
+                print("Decrypted Text: {}".format(encrypted_text).lower())
+            elif space == 2:
+                print("---Encryption---")
+                decrypted_text = hill_decryption(message, keycode)
+                decrypted_text = " ".join(decrypted_text[i:i + 5] for i in range(0, len(decrypted_text), 5))
+                print("Decrypted Text: {}".format(decrypted_text).lower())
+            else:
+                print("Invalid Input")
+        else:
+            print("Invalid Input")
+
+    elif mode == 2:
+        infile_name = input("Enter input file name: ")
+        infile = open(infile_name, 'r+')
+
+        message = infile.read()
+        message = remove(message).upper()
+
+        keycode = input("Enter 4 letter Key String: ").upper()
+        keycode = remove(keycode)
+
+        choice = int(input("1. Encryption\n2. Decryption\nChoose(1,2): "))
+        if choice == 1:
+            space = int(input("1. No space\n2. Space every 5 char\nChoose(1,2):"))
+            if space == 1:
+                print("---Encryption---")
+                encrypted_text = hill_encryption(message, keycode)
+                print("Encrypted Text: {}".format(encrypted_text).lower())
+
+                save = int(input("1. Save message to file\n2. Dont Save\nChoose(1,2):"))
+                if save == 1:
+                    infile.write(encrypted_text)
+                else:
+                    pass
+
+            elif space == 2:
+                print("---Encryption---")
+                encrypted_text = hill_encryption(message, keycode)
+                encrypted_text = " ".join(encrypted_text[i:i + 5] for i in range(0, len(encrypted_text), 5))
+                print("Encrypted Text: {}".format(encrypted_text).lower())
+
+                save = int(input("1. Save message to file\n2. Dont Save\nChoose(1,2):"))
+                if save == 1:
+                    infile.write(encrypted_text)
+                else:
+                    pass
+            else:
+                print("Invalid Input")
+
+
+        elif choice == 2:
+            space = int(input("1. No space\n2. Space every 5 char\nChoose(1,2):"))
+            if space == 1:
+                print("---Decryption---")
+                decrypted_text = hill_decryption(message, keycode)
+                print("Decrypted Text: {}".format(encrypted_text).lower())
+            elif space == 2:
+                print("---Decryption---")
+                decrypted_text = hill_decryption(message, keycode)
+                decrypted_text = " ".join(decrypted_text[i:i + 5] for i in range(0, len(decrypted_text), 5))
+                print("Decrypted Text: {}".format(decrypted_text).lower())
+            else:
+                print("Invalid Input")
+        else:
+            print("Invalid Input")
+    else:
+        print("Invalid input")
 main()

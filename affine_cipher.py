@@ -1,15 +1,15 @@
 # Dictionary
-dict1 = {'A': 0, 'B': 1, 'C': 2, 'D': 3, 'E': 4,
-         'F': 5, 'G': 6, 'H': 7, 'I': 8, 'J': 9,
-         'K': 10, 'L': 11, 'M': 12, 'N': 13, 'O': 14,
-         'P': 15, 'Q': 16, 'R': 17, 'S': 18, 'T': 19,
-         'U': 20, 'V': 21, 'W': 22, 'X': 23, 'Y': 24, 'Z': 25}
+dict1 = {'a': 0, 'b': 1, 'c': 2, 'd': 3, 'e': 4,
+         'f': 5, 'g': 6, 'h': 7, 'i': 8, 'j': 9,
+         'k': 10, 'l': 11, 'm': 12, 'n': 13, 'o': 14,
+         'p': 15, 'q': 16, 'r': 17, 's': 18, 't': 19,
+         'u': 20, 'v': 21, 'w': 22, 'x': 23, 'y': 24, 'z': 25}
 
-dict2 = {0: 'A', 1: 'B', 2: 'C', 3: 'D', 4: 'E',
-         5: 'F', 6: 'G', 7: 'H', 8: 'I', 9: 'J',
-         10: 'K', 11: 'L', 12: 'M', 13: 'N', 14: 'O',
-         15: 'P', 16: 'Q', 17: 'R', 18: 'S', 19: 'T',
-         20: 'U', 21: 'V', 22: 'W', 23: 'X', 24: 'Y', 25: 'Z'}
+dict2 = {0: 'a', 1: 'b', 2: 'c', 3: 'd', 4: 'e',
+         5: 'f', 6: 'g', 7: 'h', 8: 'i', 9: 'j',
+         10: 'k', 11: 'l', 12: 'm', 13: 'n', 14: 'o',
+         15: 'p', 16: 'q', 17: 'r', 18: 's', 19: 't',
+         20: 'u', 21: 'v', 22: 'w', 23: 'x', 24: 'y', 25: 'z'}
 
 def remove(string): 
     return string.replace(" ", "")
@@ -49,35 +49,124 @@ def affine_decrypt(cipher, a, b):
 
 
 def main(): 
-    msg = input("Enter Message: ").upper()
-    msg = remove(msg)
-    keycode = []
+    mode = int(input("1. Type Text\n2. Input File\nChoose(1,2): "))
+    if mode == 1:
+        msg = input("Enter Message: ")
+        msg = remove(msg).lower()
+        keycode = []
 
-    for i in range(0, 2):
-        if (i == 0):
-            print("Enter a key")
+        for i in range(0, 2):
+            if (i == 0):
+                print("Enter a key")
+            else:
+                print("Enter b key")
+            ele = int(input()) 
+      
+            keycode.append(ele)
+            if (i == 0):
+                print()
+              
+        print(keycode)
+        
+        choice = int(input("1. Encryption\n2. Decryption\nChoose(1,2): "))
+        
+        if choice == 1:
+
+            space = int(input("1. No space\n2. Space every 5 char\nChoose(1,2):"))
+            if space == 1:
+                print("--Encryption--")
+                encrypted_text = affine_encrypt(msg, keycode[0], keycode[1]) 
+                print('Encrypted Text: {}'.format( encrypted_text ).lower()) 
+            elif space == 2:
+                print("--Encryption--")
+                encrypted_text = affine_encrypt(msg, keycode[0], keycode[1])
+                encrypted_text = " ".join(encrypted_text[i:i + 5] for i in range(0, len(encrypted_text), 5))
+                print('Encrypted Text: {}'.format( encrypted_text ).lower())
+            else:
+                print("Invalid Input")
+            
+
+        elif choice == 2:
+            space = int(input("1. No space\n2. Space every 5 char\nChoose(1,2):"))
+            if space == 1:
+                print("--Decryption--")
+                decrypted_text = affine_decrypt(msg, keycode[0], keycode[1])
+                print('Decrypted Text: {}'.format( decrypted_text).lower()) 
+            elif space == 2:
+                print("--Decryption--")
+                decrypted_text = affine_decrypt(msg, keycode[0], keycode[1])
+                decrypted_text = " ".join(decrypted_text[i:i + 5] for i in range(0, len(decrypted_text), 5))
+                print('Decrypted Text: {}'.format( decrypted_text).lower())
+            else:
+                print("Invalid Input")
+
+            
+    elif mode == 2:
+        infile_name = input("Enter input file name: ")
+        infile = open(infile_name, 'r+')
+        msg = infile.read()
+
+        msg = remove(msg).lower()
+        keycode = []
+
+        for i in range(0, 2):
+            if (i == 0):
+                print("Enter a key")
+            else:
+                print("Enter b key")
+            ele = int(input()) 
+      
+            keycode.append(ele)
+            if (i == 0):
+                print()
+              
+        print(keycode)
+        
+        choice = int(input("1. Encryption\n2. Decryption\nChoose(1,2): "))
+        
+        if choice == 1:
+            space = int(input("1. No space\n2. Space every 5 char\nChoose(1,2):"))
+            if space == 1:
+                print("--Encryption--")
+                encrypted_text = affine_encrypt(msg, keycode[0], keycode[1]) 
+                print('Encrypted Text: {}'.format( encrypted_text ).lower())
+
+                save = int(input("1. Save message to file\n2. Dont Save\nChoose(1,2):"))
+                if save == 1:
+                    infile.write(encrypted_text)
+                else:
+                    pass
+                
+            elif space == 2:
+                print("--Encryption--")
+                encrypted_text = affine_encrypt(msg, keycode[0], keycode[1])
+                encrypted_text = " ".join(encrypted_text[i:i + 5] for i in range(0, len(encrypted_text), 5))
+                print('Encrypted Text: {}'.format( encrypted_text ).lower())
+
+                save = int(input("1. Save message to file\n2. Dont Save\nChoose(1,2):"))
+                if save == 1:
+                    infile.write(encrypted_text)
+                else:
+                    pass
+                
+            else:
+                print("Invalid Input") 
+
+        elif choice == 2:
+            space = int(input("1. No space\n2. Space every 5 char\nChoose(1,2):"))
+            if space == 1:
+                print("--Decryption--")
+                decrypted_text = affine_decrypt(msg, keycode[0], keycode[1])
+                print('Decrypted Text: {}'.format( decrypted_text).lower()) 
+            elif space == 2:
+                print("--Decryption--")
+                decrypted_text = affine_decrypt(msg, keycode[0], keycode[1])
+                decrypted_text = " ".join(decrypted_text[i:i + 5] for i in range(0, len(decrypted_text), 5))
+                print('Decrypted Text: {}'.format( decrypted_text).lower())
+            else:
+                print("Invalid Input")
         else:
-            print("Enter b key")
-        ele = int(input()) 
-  
-        keycode.append(ele)
-        if (i == 0):
-            print()
-          
-    print(keycode)
-    
-    choice = int(input("1. Encrypttion\n2. Decryption\nChoose(1,2): "))
-    
-    if choice == 1:
-        print("--Encryption--")
-        encrypted_text = affine_encrypt(msg, keycode[0], keycode[1]) 
-        print('Encrypted Text: {}'.format( encrypted_text ).lower()) 
-
-    elif choice == 2:
-        print("--Decryption--")
-        decrypted_text = affine_decrypt(msg, keycode[0], keycode[1])
-        print('Decrypted Text: {}'.format( decrypted_text).lower())
+            print("Invalid input")
     else:
-        print("Invalid input")
-
+        print("Invalid Input")
 main()
