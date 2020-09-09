@@ -1,10 +1,4 @@
-import random
 import string
-
-def key_generator():
-    letters = string.ascii_lowercase
-    key = ''.join(random.choice(letters) for i in range(26))
-    return key
 
 message = ""
 keycode = ""
@@ -21,7 +15,7 @@ def vigenere_encryption(plaintext, key):
         if c in string.ascii_lowercase:
             offset = ord(key[index]) - ord('a')
 
-            encrypted_c = chr((ord(c) - ord('a') + offset) % 26 + ord('a'))
+            encrypted_c = chr((ord(c) - ord('a') + offset) % 256 + ord('a')) 
             cipher = cipher + encrypted_c
 
             index = (index + 1)% len(key)
@@ -39,7 +33,7 @@ def vigenere_decryption(cipher, key):
             offset = ord(key[index]) - ord('a')
             decrypted_c_num = ord(c) - ord('a') - offset
             if decrypted_c_num < 0:
-                decrypted_c_num = decrypted_c_num + 26
+                decrypted_c_num = decrypted_c_num + 256
 
             decrypted_c = chr(decrypted_c_num + ord('a'))
 
@@ -55,9 +49,9 @@ def main():
     mode = int(input("1. Type Text\n2. Input File\nChoose(1,2): "))
     if mode == 1:
             
-        message = input("Enter Message: ").lower()
+        message = input("Enter Message: ")
         message = remove(message)
-        keycode = key_generator()
+        keycode = input("Enter Key: ")
         
         choice = int(input("1. Encrypttion\n2. Decryption\nChoose(1,2): "))
         if choice == 1:
@@ -98,8 +92,8 @@ def main():
         infile = open(infile_name, 'r+')
 
         message = infile.read()
-        message = remove(message).lower()
-        keycode = key_generator()
+        message = remove(message)
+        keycode = input("Enter Key: ")
         
         choice = int(input("1. Encryption\n2. Decryption\nChoose(1,2): "))
         if choice == 1:
